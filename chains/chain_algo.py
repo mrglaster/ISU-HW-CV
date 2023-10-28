@@ -41,7 +41,7 @@ def get_directions(y, x):
     }
 
 
-def get_chain(image_labeled, lbl):
+def get_chain(image_labeled, lbl=1):
     chain = []
     bounds = get_boundaries(image_labeled, lbl)
     y0, x0 = bounds[0]
@@ -59,7 +59,31 @@ def get_chain(image_labeled, lbl):
     return chain
 
 
-def main():
+def curvature(chain):
+    result = []
+    for i in range(len(chain)):
+        if i == len(chain) - 1:
+            result.append(chain[i] - chain[0])
+        else:
+            result.append(chain[i] - chain[i + 1])
+    return result
+
+
+def normalize(chain):
+    for i in range(len(chain)):
+        chain[i] = chain[i] % 8
+
+
+def is_equal(res1, res2):
+    res_copy = res1.copy()
+    while res_copy != res2:
+        last = res_copy[len(res_copy) - 1]
+        res_copy = [res_copy[i - 1] if i else 0 for i in range(len(res_copy))]
+        res_copy[0] = last
+    return res_copy == res2
+
+
+def main_prev_task():
     image = np.load("similar.npy")
     image_labeled = label(image)
     max_lbl = np.max(image_labeled)
@@ -68,6 +92,29 @@ def main():
         print(f"Figure #{i}: {get_chain(image_labeled, i)}")
     plt.imshow(image)
     plt.show()
+
+
+def main():
+    fig1 = np.zeros((5, 5))
+    fig1[1:3, 1:-1] = 1
+    fig2 = fig1.T
+
+    result1 = get_chain(fig1, 1)
+    result2 = get_chain(fig2, 1)
+    print(f"Fig #1 {result1}")
+    print(f"Fig #2 {result2}")
+
+    curved_first = curvature(result1)
+    curved_second = curvature(result2)
+
+    normalize(curved_first)
+    normalize(curved_second)
+
+    print(f"\nFig #1: {curved_first}")
+    print(f"Fig #2: {curved_second}")
+
+    equality = is_equal(curved_first, curved_second)
+    print("\nResult: Figures are equal") if equality else print("\nResult: Figures aren't equal")
 
 
 if __name__ == '__main__':
