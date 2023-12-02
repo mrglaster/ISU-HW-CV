@@ -44,7 +44,10 @@ def process_image(path):
     for i in shades:
         print(f"{i}         {shades[i][0]}          {shades[i][1]}")
 
-
-if __name__ == "__main__":
+def main():
     image_path = "balls_and_rects.png"
     process_image(image_path)
+
+if __name__ == "__main__":
+    main()
+    
