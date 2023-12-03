@@ -36,7 +36,7 @@ def show_trajectory():
 
 
 def process_trajectory():
-    for i in range(99):
+    for i in range(100):
         process_image(f'out/h_{i}.npy')
     show_trajectory()
 
